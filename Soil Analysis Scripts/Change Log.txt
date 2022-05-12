@@ -1,0 +1,10 @@
+10/18/2017 - Created Files for seperating and running stats on the various soil parameters obtained from the combined files programmed 
+
+Soil Parameter Separation Program V1 - Seperates parameters into ON and OFF cycles, where on is during a measurement
+
+Soil Measurement Averages Post Separation V1- Runs stats on the parameters to create hourly averages
+
+10/19/2017
+
+Soil Parameter Separation Program V1.1 - Added AH
+Soil Measurement Averages Post Separation V1.1 - Added AH

@@ -1,0 +1,64 @@
+#### Ozone Measurements ######
+
+## Before 7/22/16 07:00:00 PM - Ambient Measurements for 5 mins - Chamber Measurements for 10 ##
+## After 7/22/16 07:00:00 PM - Ambient Measurements for 7 mins - Chamber Measurements for 8 mins ##
+
+## Total Ozone Measurements ##
+
+file <- file.choose()
+ozone <- read.csv(file)
+colnames(ozone) <- c("datetime","Ozone_ppb")
+datetime <- strptime(ozone$datetime, "%m/%d/%Y %H:%M:%S", tz = "est")
+ozone$min <- datetime$min
+ozone$day <- datetime$mday
+ozone$hour <- datetime$hour
+
+## Seperate Data by Subsets if after 7/22/16 ##
+
+amba <- subset(ozone, subset = min > 1 & min < 7)
+ambb <- subset(ozone, subset = min > 16 & min < 22)
+ambc <- subset(ozone, subset = min > 31 & min < 37)
+ambd <- subset(ozone, subset = min > 46 & min < 52)
+
+chambera <- subset(ozone, subset = min > 8 & min < 15)
+chamberb <- subset(ozone, subset = min > 23 & min < 30)
+chamberc <- subset(ozone, subset = min > 38 & min < 45)
+chamberd <- subset(ozone, subset = min > 53 & min < 60)
+
+## Seperate Data by Subsets if before 7/22/16 ##
+
+amba <- subset(ozone, subset = min > 1 & min < 5)
+ambb <- subset(ozone, subset = min > 16 & min < 20)
+ambc <- subset(ozone, subset = min > 31 & min < 35)
+ambd <- subset(ozone, subset = min > 46 & min < 50)
+
+chambera <- subset(ozone, subset = min > 6 & min < 15)
+chamberb <- subset(ozone, subset = min > 21 & min < 30)
+chamberc <- subset(ozone, subset = min > 36 & min < 45)
+chamberd <- subset(ozone, subset = min > 51 & min < 60)
+
+## Combined Ambient Data ##
+
+amb <- rbind(amba, ambb, ambc, ambd)
+
+filename <- paste0("C:/Users/Zachary/Desktop/Ozone_amb_2.csv")
+write.table(amb[1:2], file = filename, append = FALSE, sep = ",", row.names = FALSE)
+
+chambera <- data.frame(chambera$Ozone_ppb, chambera$datetime)
+chamberb <- data.frame(chamberb$Ozone_ppb, chamberb$datetime)
+chamberc <- data.frame(chamberc$Ozone_ppb, chamberc$datetime)
+chamberd <- data.frame(chamberd$Ozone_ppb, chamberd$datetime)
+
+library(plyr)
+
+cbind.fill <- function(...) {                                                                                                                                                       
+  transpoted <- lapply(list(...),t)                                                                                                                                                 
+  transpoted_dataframe <- lapply(transpoted, as.data.frame)                                                                                                                         
+  return (data.frame(t(rbind.fill(transpoted_dataframe))))                                                                                                                          
+} 
+
+chambers <- cbind.fill(chambera, chamberb, chamberc, chamberd)
+colnames(chambers) <- c('ozone_a', 'datetime_a', 'ozone_b', 'datetime_b', 'ozone_c', 'datetime_c', 'ozone_d', 'datetime_d')
+
+filename2 <- paste0("C:/Users/Zachary/Desktop/Ozone_Chambers.csv")
+write.table(chambers, file = filename2, append = FALSE, sep = ",", row.names = FALSE)
